@@ -1,25 +1,25 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
 resource "aws_instance" "ec2-user" {
-  ami = "ami-07caf09b362be10b8"
-  instance_type = "t2.micro"
-  key_name = "linux-kp"
+  ami = var.os_name
+  instance_type = var.instance_type
+  key_name = var.key
   subnet_id = aws_subnet.demo_subnet.id
   vpc_security_group_ids = [aws_security_group.demo-sg.id]
 }
 
 //create vpc
 resource "aws_vpc" "demo-vpc" {
-  cidr_block = "10.10.0.0/16"
+  cidr_block = var.vpc_cidr
 }
 
 //create subnet
 
 resource "aws_subnet" "demo_subnet" {
   vpc_id = aws_vpc.demo-vpc.id
-  cidr_block = "10.10.1.0/24"
+  cidr_block = var.subnet_cidr
   map_public_ip_on_launch = true
   tags = {
      Name="demo subnet"
